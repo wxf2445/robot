@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <style>
+        	body{
+        		margin: 0px 0px;
+        	}
+        </style>
+<script>
+var operation_type = "";
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+          x:(evt.clientX-rect.left),
+          y:(evt.clientY-rect.top)
+    };
+
+}
+openImage();
+function openImage(){
+	var image = new Image();
+	image.src = 'image/aa.png';
+	image.onload = function(){
+		var canvas = document.getElementById("myCanvas");
+		canvas.width = image.width;
+		canvas.height = image.height;
+		/*orgin_canvas_width = image.width;
+		orgin_canvas_height = image.height;*/
+		canvas.getContext("2d").drawImage(image, 0, 0);   
+		document.getElementById("img").src = image.src;
+	}
+}
+function canvasPencil(){
+	//document.getElementById("myCanvas").style.cursor = "url('image/pencil.png'),default";
+
+	operation_type = "pencil";
+}
+function cutDiv(){
+	//document.getElementById("myCanvas").style.cursor = "url('image/div.png'),default";
+	operation_type = "cut";
+}
+function myPrint(){
+	var t_img,isLoad = false; 
+    var canvas = document.getElementById("myCanvas2");
+    var image = new Image();
+    image.onload = function(){
+    	isLoad = true;
+    }
+    image.src = canvas.toDataURL("image/png");
+    var div = document.getElementById("target1");
+    div.innerHTML = "";
+    div.appendChild(image);
+    checkfunction(isLoad);
+	function checkfunction(){
+		if(isLoad){
+	        clearTimeout(t_img); 
+		
+		     var newWindow=window.open("","_blank");
+		     var docStr = div.innerHTML;
+		     newWindow.document.write(docStr);
+		     newWindow.document.close();
+		     newWindow.print();
+		     newWindow.close();
+	  }else{
+	        t_img = setTimeout(function(){
+	             checkfunction()// 递归扫描
+	        },500); // 我这里设置的是500毫秒就扫描一次，可以自己调整
+	    }
+	}
+    
+}
+
+window.onload = function(){
+	var canvas_div = document.getElementById("canvas_div");
+	var canvas = document.getElementById("myCanvas");
+	var cans = canvas.getContext("2d"); 
+	var last_x , last_y ,locked = 0;
+	var start_x,start_y/*,is_down=false*/;
+	canvas.addEventListener('mousedown', function(evt) {
+		//cans.lineWidth = 8;
+		if(operation_type=="")return;
+		/*if(operation_type=="pencil"){
+	    	var mousePos = getMousePos(canvas, evt);
+	    	locked = 1;
+	    	last_x = mousePos.x;
+			last_y = mousePos.y;
+		}else{*/
+    		canvas_div.style.display = "";
+			//if(is_down){
+	    		canvas_div.style.width = "0px";
+	    		canvas_div.style.height =  "0px";
+			//}
+	    	var mousePos = getMousePos(canvas, evt);
+	    	locked = 1;
+			canvas_div.style.left = mousePos.x+"px";
+			canvas_div.style.top = mousePos.y+"px";
+			start_x = mousePos.x;
+			start_y = mousePos.y;
+		/*}*/
+    });
+	canvas.addEventListener('mouseup', function(evt) {
+		if(operation_type=="")return;
+		if(operation_type=="pencil"){
+	    	/*locked = 0;
+			document.getElementById("img").src=canvas.toDataURL("image/png");*/
+			locked = 0;
+	    	//is_down = true;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	var canvas_div_width = (mousePos.x - start_x );
+	    	var canvas_div_height = (mousePos.y - start_y );
+      		var context = canvas.getContext("2d");
+            context.fillStyle = 'white';
+            context.fillRect(start_x,start_y,canvas_div_width,canvas_div_height);
+	    	
+			document.getElementById("img").src=canvas.toDataURL("image/png");
+		}else{
+	    	locked = 0;
+	    	//is_down = true;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	var canvas_div_width = (mousePos.x - start_x );
+	    	var canvas_div_height = (mousePos.y - start_y );
+	    	
+	    	var imageObj = new Image();
+	    	imageObj.src = canvas.toDataURL("image/png");
+	    	
+			document.getElementById("myCanvas2_div").innerHTML = "";
+			canvas2 = document.createElement("canvas");
+			canvas2.setAttribute("id","myCanvas2")
+			document.getElementById("myCanvas2_div").appendChild(canvas2);
+			
+			var context = canvas2.getContext('2d');
+			canvas2.width = canvas_div_width;
+			canvas2.height = canvas_div_height;
+			context.drawImage(imageObj, start_x, start_y, canvas_div_width,canvas_div_height, 0, 0, canvas_div_width,canvas_div_height);
+	    	
+	    	
+			document.getElementById("img").src=canvas.toDataURL("image/png");
+		}
+    });
+	canvas.addEventListener('mousemove', function(evt) {
+		if(operation_type=="")return;
+		if(operation_type=="pencil"){
+			if(locked!=1)return ;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	canvas_div.style.width =  (mousePos.x - start_x) +"px";
+	    	canvas_div.style.height =  (mousePos.y - start_y) +"px";
+	    	/*var mousePos = getMousePos(canvas, evt);
+			cans.moveTo(last_x,last_y);
+			cans.lineTo(mousePos.x,mousePos.y);
+	    	cans.strokeStyle = '#ccc';
+			cans.stroke();
+			last_x = mousePos.x;
+			last_y = mousePos.y;*/
+		}else{
+			if(locked!=1)return ;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	canvas_div.style.width =  (mousePos.x - start_x) +"px";
+	    	canvas_div.style.height =  (mousePos.y - start_y) +"px";
+	    	//canvas_div.innerHTML ="x:"+mousePos.x+" y:"+mousePos.y;
+		}
+    });
+    
+	canvas_div.addEventListener('mousedown', function(evt) {
+		cans.lineWidth = 8;
+		if(operation_type=="")return;
+		/*if(operation_type=="pencil"){
+	    	var mousePos = getMousePos(canvas, evt);
+	    	locked = 1;
+	    	last_x = mousePos.x;
+			last_y = mousePos.y;
+		}else{*/
+    		//canvas_div.style.display = "";
+			//if(is_down){
+	    		canvas_div.style.width = "0px";
+	    		canvas_div.style.height =  "0px";
+			//}
+	    	var mousePos = getMousePos(canvas, evt);
+	    	locked = 1;
+			canvas_div.style.left = mousePos.x+"px";
+			canvas_div.style.top = mousePos.y+"px";
+			start_x = mousePos.x;
+			start_y = mousePos.y;
+		/*}*/
+    });
+    canvas_div.addEventListener('mouseup', function(evt) {
+    	
+		if(operation_type=="")return;
+		if(operation_type=="pencil"){
+	    	/*locked = 0;
+			document.getElementById("img").src=canvas.toDataURL("image/png");*/
+			locked = 0;
+	    	//is_down = true;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	var canvas_div_width = (mousePos.x - start_x );
+	    	var canvas_div_height = (mousePos.y - start_y );
+      		var context = canvas.getContext("2d");
+            context.fillStyle = 'white';
+            context.fillRect(start_x,start_y,canvas_div_width,canvas_div_height);
+	    	
+			document.getElementById("img").src=canvas.toDataURL("image/png");
+		}else{
+	    	locked = 0;
+	    	//is_down = true;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	var canvas_div_width = (mousePos.x - start_x );
+	    	var canvas_div_height = (mousePos.y - start_y );
+	    	
+	    	var imageObj = new Image();
+	    	imageObj.src = canvas.toDataURL("image/png");
+	    	
+			document.getElementById("myCanvas2_div").innerHTML = "";
+			canvas2 = document.createElement("canvas");
+			canvas2.setAttribute("id","myCanvas2")
+			document.getElementById("myCanvas2_div").appendChild(canvas2);
+			
+			var context = canvas2.getContext('2d');
+			canvas2.width = canvas_div_width;
+			canvas2.height = canvas_div_height;
+			context.drawImage(imageObj, start_x, start_y, canvas_div_width,canvas_div_height, 0, 0, canvas_div_width,canvas_div_height);
+	    	
+	    	
+			document.getElementById("img").src=canvas.toDataURL("image/png");
+			
+	    	canvas_div.style.width =  (mousePos.x - start_x) +"px";
+	    	canvas_div.style.height =  (mousePos.y - start_y) +"px";
+	    }
+    });
+    canvas_div.addEventListener('mousemove', function(evt) {
+			if(locked!=1)return ;
+	    	var mousePos = getMousePos(canvas, evt);
+	    	canvas_div.style.width =  (mousePos.x - start_x) +"px";
+	    	canvas_div.style.height =  (mousePos.y - start_y) +"px";
+	    	
+    });
+}	
+    function getBigger(){
+    	canvas_div.style.display = "none";
+    	operation_type = "";
+    	
+    	var canvas = document.getElementById("myCanvas");
+		canvas.width = canvas.width*1.1;
+		canvas.height = canvas.height*1.1;
+		
+		var imageObj = document.getElementById("img");
+		var context = canvas.getContext('2d');
+	    context.drawImage(imageObj,0,0,canvas.width,canvas.height);
+		document.getElementById("img").src=canvas.toDataURL("image/png");
+    }
+    function getSmaller(){
+    	canvas_div.style.display = "none";
+    	operation_type = "";
+    	
+    	var canvas = document.getElementById("myCanvas");
+		canvas.width = canvas.width*0.9;
+		canvas.height = canvas.height*0.9;
+		
+		var imageObj = document.getElementById("img");
+		var context = canvas.getContext('2d');
+	    context.drawImage(imageObj,0,0,canvas.width,canvas.height);
+		document.getElementById("img").src=canvas.toDataURL("image/png");
+    }
+    
+    function rotateImg(direction) {  
+    	
+        var degree = 0;  
+        var canvas = document.getElementById('myCanvas');  
+        if (canvas == null)return;  
+        //img的高度和宽度不能在img元素隐藏后获取，否则会出错  
+        var height = canvas.height;  
+        var width = canvas.width;  
+          
+        var imageObj = document.getElementById("img");
+        
+        var ctx = canvas.getContext('2d');  
+        
+        if (direction == 'left') {  
+        	degree = 270 * Math.PI / 180;
+        	canvas.width = height;  
+            canvas.height = width;  
+            ctx.rotate(degree);  
+            ctx.drawImage(imageObj, -width, 0);  
+        } else {  
+        	degree = 90 * Math.PI / 180;
+            canvas.width = height;  
+            canvas.height = width;  
+            ctx.rotate(degree);  
+            ctx.drawImage(imageObj, 0, -height);  
+        }
+        
+		document.getElementById("img").src=canvas.toDataURL("image/png");
+		turnChange();
+	    
+		
+    }  
+    function turnChange(){
+    	canvas_div.style.display = "none";
+    	operation_type = "";
+    	
+    	var canvas = document.getElementById("myCanvas");
+		canvas.width = canvas.width*1;
+		canvas.height = canvas.height*1;
+		
+		var imageObj = document.getElementById("img");
+		var context = canvas.getContext('2d');
+	    context.drawImage(imageObj,0,0,canvas.width,canvas.height);
+		document.getElementById("img").src=canvas.toDataURL("image/png");
+    }
+        </script>
+    </head>
+    <body>
+        <article class="sucaihuo-container">
+            <div class="container">
+                <div class="row">
+                	<img id="img" style="display:none"/>
+                    <div class="col-xs-12 col-md-6 col-lg-6" id="pimg">
+                        <div id='target1' style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    <div id="divv">
+		<canvas id="myCanvas"></canvas>
+		<div id="canvas_div" style="border:1px solid #000;position: absolute;"></div>
+    </div>
+	<button onclick="canvasPencil()">遮盖框</button> 
+	<button onclick="rotateImg('left')">向左旋转</button> 
+	<button onclick="rotateImg('right')">向右旋转</button> 
+	<button onclick="getBigger()">放大</button> 
+	<button onclick="getSmaller()">缩小</button> 
+	<button onclick="cutDiv()">剪切框</button> 
+	<br>
+	<br>
+	效果图:
+	<br>
+    <div id="myCanvas2_div">
+		<canvas id="myCanvas2"></canvas>
+    </div>
+	<br>
+	<button onclick="myPrint()">打印</button> 
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Puzzle effect - by Wander</title>
+<style type="text/css">
+* {margin:0; padding:0}
+.imgWrap{position:absolute;left:10px;top: 10px;width:500px;height:500px;
+			background:url(image/llll.png) no-repeat -0px -0px;}
+</style>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+var image_src = new Array("image/ll.png","image/lll.png","image/llll.png");
+var image_cur = 0;
+var image = new Image();
+var piece = 25;
+/*image.onload = function(){
+	var height_ = $(window).height();
+	var width_ = $(window).width();
+	height_ = (height_-this.height)/2;
+	width_ = (width_-this.width)/2;
+	var length = this.width/piece;
+	for(var i=0;i<piece;i++){
+		for(var j=0;j<piece;j++){
+			var div = document.createElement("div");
+			div.setAttribute("left",(width_+length*(i))+"px");
+			div.setAttribute("top",(height_+length*(j))+"px");
+			var ran_x = parseInt(Math.random()*piece);
+			var ran_y = parseInt(Math.random()*piece);
+			div.style.cssText="position:absolute;left:"+(width_+length*(ran_x))+"px;top:"+(height_+length*(ran_y))+"px;"+
+			"background:url("+this.src+") no-repeat -"+length*i+"px -"+length*j+
+			"px;height:"+length+"px;width:"+length+"px";
+			document.body.appendChild(div);
+		}
+	}
+	var divs = $("div");
+	for(var i=0;i<piece;i++){
+		for(var j=0;j<piece;j++){
+			divs.eq(i*piece+j).animate({'top':divs.eq(i*piece+j).attr("top"),'left':divs.eq(i*piece+j).attr("left")},2000);
+		}
+	}
+}*/
+image.onload = function(){
+	var height_ = window.innerHeight;
+	var width_ = window.innerWidth;
+	height_ = (height_-this.height)/2;
+	width_ = (width_-this.width)/2;
+	var length = this.width/piece;
+	var arr = new Array();
+	for(var i=0;i<piece*piece;i++) arr.push(1);
+	for(var i=0;i<piece;i++){
+		for(var j=0;j<piece;j++){
+			var div = document.createElement("div");
+			div.setAttribute("left",(width_+length*(i))+"px");
+			div.setAttribute("top",(height_+length*(j))+"px");
+			var ran_x = parseInt(Math.random()*piece),ran_y = parseInt(Math.random()*piece);
+			/*while(arr[ran_x*piece+ran_y]==0){
+			    ran_x = parseInt(Math.random()*piece);
+			    ran_y = parseInt(Math.random()*piece);
+			}
+			arr[ran_x*piece+ran_y] = 0;*/
+			div.style.cssText="position:absolute;left:"+(width_+length*(ran_x))+"px;top:"+(height_+length*(ran_y))+"px;"+
+			"background:url("+this.src+") no-repeat -"+length*i+"px -"+length*j+
+			"px;height:"+length+"px;width:"+length+"px;";
+			document.body.appendChild(div);
+		}
+	}
+	var divs = $("div");
+		for(var i=0;i<piece;i++){
+			for(var j=0;j<piece;j++){
+				var index = i*piece+j;
+				var top = divs.eq(index).attr('top');
+				var left = divs.eq(index).attr('left');
+				divs.eq(index).animate({'top':top,'left':left},1000);
+			}
+		}
+}
+image.src="image/ll.png";
+var int=self.setInterval("imageOnLoad()",piece*piece*5+1000);
+function imageOnLoad(){
+	$("div").remove();
+	image.src=image_src[++image_cur%image_src.length];
+}
+</script>
+</head>
+<body>
+</body>
+</html>

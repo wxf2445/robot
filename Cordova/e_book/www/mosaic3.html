@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <script src="js/canvas2image.js"></script>
+        <script>
+        window.onload = function(){
+			var canvas = document.getElementById('myCanvas');
+			var context = canvas.getContext('2d');
+			var imageObj = document.getElementById("img");
+			
+			imageObj.onload = function() {
+			  // draw cropped image
+				  var sourceX = 60;
+				  var sourceY =  0;
+				  var sourceWidth = 180;
+				  var sourceHeight = 180;
+				  var destWidth = sourceWidth;
+				  var destHeight = sourceHeight;
+				  var destX = canvas.width / 2 - destWidth / 2;
+				  var destY = canvas.height / 2 - destHeight / 2;
+				  context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+			};
+			imageObj.src="image/ll.png"; 
+        }	
+        </script>
+    </head>
+    <body>
+	    <article class="sucaihuo-container">
+	        <div class="container">
+	            <div class="row">
+	            	<img id="img" />
+	                <div class="col-xs-12 col-md-6 col-lg-6" id="pimg">
+	                    <div id='target1' style="display: none;"></div>
+	                </div>
+	            </div>
+	        </div>
+	    </article>
+		<canvas id="myCanvas"></canvas>
+    </body>
+</html>

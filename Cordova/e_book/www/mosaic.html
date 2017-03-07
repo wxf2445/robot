@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <script>
+        function getMousePos(canvas, evt) {
+	        var rect = canvas.getBoundingClientRect();
+            return {
+                  x:(evt.clientX-rect.left),
+                  y:(evt.clientY-rect.top)
+            };
+
+        }
+        function openImage(image){
+			var canvas = document.getElementById("myCanvas");
+			canvas.width = image.width;
+			canvas.height = image.height;
+			canvas.getContext("2d").drawImage(image, 0, 0);     
+        	var cans = canvas.getContext("2d"); 
+			var last_x , last_y ,locked = 0;
+			cans.lineWidth = 8;
+			canvas.addEventListener('mousedown', function(evt) {
+	        	var mousePos = getMousePos(canvas, evt);
+	        	locked = 1;
+				last_x = mousePos.x;
+				last_y = mousePos.y;
+	        });
+			canvas.addEventListener('mouseup', function(evt) {
+	        	locked = 0;
+	        });
+			canvas.addEventListener('mousemove', function(evt) {
+				if(locked!=1)return ;
+	        	var mousePos = getMousePos(canvas, evt);
+				cans.moveTo(last_x,last_y);
+				cans.lineTo(mousePos.x,mousePos.y);
+            	cans.strokeStyle = '#000';
+				cans.stroke();
+				last_x = mousePos.x;
+				last_y = mousePos.y;
+	       });
+        }
+		function getImage(){
+			var image = document.getElementById("image1");
+			var canvas = document.getElementById("myCanvas");
+			image.src = canvas.toDataURL("image/png");
+		}
+        </script>
+    </head>
+    <body>
+        <article class="sucaihuo-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <img src="image/lll.png" id='image1' class="img-thumbnail mt10" alt="" onclick="openImage(this)">
+                    </div>
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <div id='target1'></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+	<canvas id="myCanvas"  style="border: solid"></canvas>
+	<button onclick="getImage()">打印</button>
+    </body>
+</html>

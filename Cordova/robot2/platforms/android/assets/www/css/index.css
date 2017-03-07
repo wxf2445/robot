@@ -1,0 +1,68 @@
+
+
+
+/* index ----------------------*/
+
+.openpanel{
+	margin-left: 10px;
+}
+#leftpanel{
+	/*background: #f7f7f7;*/
+	/*background: #3C3C3C;*/
+	background: url(images/panel.jpg);
+}
+
+#leftpanel .panel-navigation li{
+	list-style-type:none;
+	margin-top:10px;
+	width: 60%;
+	margin-left: 20%;
+	color: #fff;
+}
+
+#leftpanel .panel-navigation i{
+	color: #fff;
+}
+
+
+.user-headimage{
+	width: 100px;
+	height:100px;
+    -moz-border-radius: 100px; 
+    -webkit-border-radius: 100px; 
+    border-radius:100px;    
+    background: url(../img/lll.jpg);
+    background-size: 100%;	
+	overflow: hidden;border:4px solid #ccc
+}
+/*.user-headimage img{
+	width: 100px;
+	height:100px;
+}*/
+.user-name{
+	width:100%;
+	height:30px;
+	font-size:16px;
+	line-height:150%;
+	text-align:center;
+	margin-top:10px;
+	font-family:"微软雅黑";
+	color:#fff
+}
+.whiteline{
+	width:98%;
+	border-bottom: 1px #fff solid;
+}
+.alert_p p{
+	background:#FFE4E1;border-radius: 3px;padding: 10px;
+}
+*{margin:0px; padding:0px; 
+ font-size:14px; line-height:24px; color:#000;text-shadow:none;}
+ 
+div[data-role=header]{
+	height: 50px;
+}
+input.vertical{vertical-align:middle; margin-top:-2px; margin-bottom:1px;}
+/*div[data-role=header] h1{
+	border-bottom: 1px solid #00415E;
+}*/

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script>
+/*		var recordNo = "fondsid-12";
+		var s_num = recordNo.indexOf("S");
+    	if(recordNo.indexOf("S-")>0)
+    		recordNo = recordNo.substring(0,recordNo.indexOf("S-")-1);
+    	else if(recordNo.indexOf("S.")>0)
+    		recordNo = recordNo.substring(0,recordNo.indexOf("S.")-1);
+    	else if(s_num>0&&/^[0-9]+$/.test(recordNo.charAt(s_num+1)))
+    		recordNo = recordNo.substring(0,s_num-1);
+    	else
+    	    recordNo = recordNo.substring(0,recordNo.replace(".","-").lastIndexOf("-"));*/
+    	//alert(recordNo);
+
+	</script>
+	<script type="text/javascript">
+/*
+  window.onbeforeunload = onbeforeunload_handler;
+  //window.onunload = onunload_handler;
+  function onbeforeunload_handler(){
+    var warning="确认退出?";
+    alert(warning);
+  }*/
+/*  function onunload_handler(){
+    var warning="谢谢光临";
+    alert(warning);
+  }*/
+function printPDF(path){
+ 	$("#printIframe").remove();
+ 	$("body").append("<iframe style=\"display:none\" id=\"printIframe\" src=\""+path+"\"></iframe>");
+	$("#printIframe")[0].contentWindow.print();
+ 
+}
+</script>
+	<body>
+		<button onclick="printPDF()"></button>
+	</body>
+</html>
